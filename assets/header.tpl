@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>md notepad</title>
+  <title>MD-database</title>
 
   <link rel="icon" type="image/png" sizes="196x196" href="/assets/favicon-196x196.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">

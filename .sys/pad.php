@@ -2,9 +2,6 @@
 
 class pad
 {
-    const MDB_DIR = 'data';         // папка базы данных по-умолчанию
-    const MDB_IDX = 'dir.md';       // имя индесного файла по-умолчанию
-
     public string $fpath_url;       // url-адрес текущего файла
     public string $fpath_fs;        // путь к текущему файлу
     public string $dbpath_fs;       // путь в ФС к каталогу базы данных
@@ -18,9 +15,8 @@ class pad
 
     public function __construct() {
         $S = DIRECTORY_SEPARATOR;
-
+        $this->dbpath_fs = $_SERVER['DOCUMENT_ROOT'].$S.MD_DIR.$S;
         $this->fpath_url = $_SERVER['SCRIPT_NAME'];
-        $this->dbpath_fs = $_SERVER['DOCUMENT_ROOT'] . $S . self::MDB_DIR . $S;
         $this->init_query_str();
         $this->init_top_dir_list();
         $this->init_files_list();
@@ -46,7 +42,7 @@ class pad
         {
           $fpath = $this->dbpath_fs . $v;
           if (!str_starts_with($v, '.') and is_dir($fpath))
-              $this->top_dir_list_url[$v] = '/' . self::MDB_DIR .'/'. $v;
+              $this->top_dir_list_url[$v] = '/' . MD_DIR .'/'. $v;
         }
     }
 
@@ -70,17 +66,39 @@ class pad
         $this->files_list = array();
         $this->tree = new tree();
 
-        // путь в локальной ФС к указанному в адресной строке файлу
+        // путь в локальной ФС к указанному в адресной строке файлу.
+        // Обрабатываются только файлы с расширением `.md`. Все остальные
+        // файлы отдаются браузеру автоматически без обработки.
         $this->fpath_fs  = $_SERVER['SCRIPT_FILENAME'];
+
         if (!str_starts_with($this->fpath_fs, $this->dbpath_fs))
         {
-            $this->err = "Ошибка: запрошенный документ на найден";
-            $this->fpath_fs = '';
-            return;
+            // если .md файл по указанному пути не найден, то проверить -
+            // может это папка, расположенная в каталоге базы данных
+            if (str_starts_with($_SERVER['SCRIPT_NAME'], '/'. MD_DIR))
+            {
+              $this->fpath_fs = $_SERVER['DOCUMENT_ROOT'] .
+                       str_replace('/', DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']);
+
+              if(!str_ends_with($this->fpath_fs, DIRECTORY_SEPARATOR))
+                  $this->fpath_fs .= DIRECTORY_SEPARATOR;
+            }
+
+            if(!is_dir($this->fpath_fs))
+            {
+              $this->err = "ERROR 404: not found.";
+              $this->fpath_fs = '';
+              return;
+            }
         }
 
         $wu = $this->cut_end($this->fpath_url, '/');
-        $wf = $this->cut_end($this->fpath_fs, DIRECTORY_SEPARATOR);
+
+        if(is_file($this->fpath_fs))
+          $wf = $this->cut_end($this->fpath_fs, DIRECTORY_SEPARATOR);
+        else
+          $wf = $this->fpath_fs;
+
         $t = scandir($wf);
 
         foreach ($t as $v)

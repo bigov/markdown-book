@@ -2,26 +2,22 @@
 //phpinfo();
 //exit();
 
-$folder_data = 'data';     // имя директории, в которой расположены данные
-$file_index  = 'dir.md';   // индекс по-умолчанию
+const MD_DIR = 'data';        // папка базы данных по-умолчанию
+$file_index  = 'dirinfo.md';  // индекс по-умолчанию
+$tpls = 'assets/';            // папка шаблонов
 
 if ($_SERVER['REQUEST_URI'] == '/')
 {
-  header("Location: /$folder_data/$file_index");
+  header("Location: /".MD_DIR."/$file_index");
   exit;
 }
 
 //require_once '.sys/php-markdown/Michelf/Markdown.inc.php';
 require_once '.sys/php-markdown/Michelf/MarkdownExtra.inc.php';
-use Michelf\MarkdownExtra;
-
 require_once '.sys/pad.php';
 require_once '.sys/tree.php';
 
-$DS = '\\';
-$WD = getcwd();
-$coredir  = $WD . $DS . '.sys' . $DS;      // полный путь к файлам ядра
-
+use Michelf\MarkdownExtra;
 $PAD = new mdb\pad();
 
 // Если принят запрос с новым текстом, то записать и вернуться к файлу
@@ -37,7 +33,10 @@ $footer = 'footer.tpl';
 
 if(is_null($PAD->err))
 {
-    $page_content = MarkdownExtra::defaultTransform(file_get_contents($PAD->fpath_fs));
+    if(is_file($PAD->fpath_fs))
+      $page_content = MarkdownExtra::defaultTransform(file_get_contents($PAD->fpath_fs));
+    else
+      $page_content = "<h2>Каталог базы данных</h2>";
 }
 else
 {
@@ -52,15 +51,17 @@ if (array_key_exists('QUERY_STRING', $_SERVER) and str_starts_with($_SERVER['QUE
     $page_content = file_get_contents($PAD->fpath_fs);
 }
 
-print (file_get_contents($coredir . $header));
+// Рендер HTML страницы в клиентский браузер
+
+print (file_get_contents($tpls . $header));
 print ($page_content);
-print (file_get_contents($coredir . $column));
+print (file_get_contents($tpls . $column));
 
 print ('<ul id="menu">');
-print ("<li><a href='/$folder_data/dir.md'>HOME</a></li>");
+print ("<li><a href='/".MD_DIR."/$file_index'>HOME</a></li>");
 foreach ($PAD->top_dir_list_url as $title => $url)
 {
-    print ("<li><a href='$url/dir.md'>$title</a></li>");
+    print ("<li><a href='$url/$file_index'>$title</a></li>");
 }
 print ("</ul>");
 
@@ -72,5 +73,5 @@ foreach ($PAD->files_list as $title => $url)
 print ("</ul>");
 
 
-print (file_get_contents($coredir . $footer));
+print (file_get_contents($tpls . $footer));
 
