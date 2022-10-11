@@ -64,7 +64,6 @@ class pad
     protected function init_files_list()
     {
         $this->files_list = array();
-        $this->tree = new tree();
 
         // путь в локальной ФС к указанному в адресной строке файлу.
         // Обрабатываются только файлы с расширением `.md`. Все остальные
@@ -84,13 +83,15 @@ class pad
                   $this->fpath_fs .= DIRECTORY_SEPARATOR;
             }
 
+            // если это и не папка, то сообщить об ошибке
             if(!is_dir($this->fpath_fs))
             {
-              $this->err = "ERROR 404: not found.";
+              $this->err = "ERROR 404: document not found.";
               $this->fpath_fs = '';
-              return;
+              //return;
             }
         }
+        $this->tree = new tree($this->fpath_fs);
 
         $wu = $this->cut_end($this->fpath_url, '/');
 
