@@ -2,45 +2,89 @@
 
 class tree
 {
-    public $parent;
-    public array $documents;
-    public array $folders;
-    public array $tree_list;
     protected string $pathdir;
+    protected string $data_dir;
+    public array $ar_top;
+    public array $ar_step;
+    public array $ar_current;
+    public array $ar_bottom;
 
     public function __construct( string $fpath = '' )
     {
-        $this->parent = null;
-        $this->documents = array();
-        $this->folders = array();
+        $this->ar_top = array();
+        $this->ar_step = array();
+        $this->ar_current = array();
+        $this->ar_bottom = array();
+
         $this->setup_current_pathdir($fpath);
         $this->setup_tree_list();
+        $this->setup_step_list();
+        $this->setup_top_list();
+    }
+
+    /**
+     * построение списков директорий верхнего уровня
+     */
+    protected function setup_top_list()
+    {
+        $l = scandir($this->data_dir);
+        $dirs = array();   // список всех папок верхнего уровня
+
+        foreach($l as $o)
+        {
+            if(!str_starts_with($o, '.'))
+            {
+              if(is_dir($this->data_dir . $o)) $dirs[] = $o;
+            }
+        }
+
+        if(count($this->ar_step) > 0)
+        {
+          $n = count($dirs);
+          $s = array_shift($this->ar_step);
+          while($n > 0)
+          {
+            $e = array_shift($dirs);
+            $this->ar_top[] = $e;
+            if($e == $s) $n = 1;
+            $n -= 1;
+          }
+          $this->ar_bottom = $dirs;
+        }
+    }
+
+    /**
+     * Построение списка директорий к текущему каталогу
+     */
+    protected function setup_step_list()
+    {
+        $data_dir = $_SERVER['DOCUMENT_ROOT'] 
+                  . DIRECTORY_SEPARATOR 
+                  . MD_DIR . DIRECTORY_SEPARATOR;
+        $st = substr($this->pathdir, strlen($data_dir), -1);
+        $this->ar_step = explode(DIRECTORY_SEPARATOR, $st);
+        if(empty($this->ar_step[0])) array_shift($this->ar_step);
+        $this->data_dir = $data_dir;
     }
 
 
     /**
-     * Построение массива, содержащего дерево файлов
+     * Построение списка директорий и файлов текущего каталога
      */
     protected function setup_tree_list()
     {
-        //$tree_list[]
         $l = scandir($this->pathdir);
         $dirs = array();
         $files = array();
-        foreach ($l as $o)
+        foreach($l as $o)
         {
-            if (!str_starts_with($o, '.'))
+            if(!str_starts_with($o, '.'))
             {
               if(is_file($this->pathdir . $o)) $files[] = $o;
               else $dirs[] = $o;
             }
         }
-        $tl = array();
-        $tl[] = $dirs;
-        $tl[] = $files;
-
-        print_r($tl);
-        exit;
+        $this->ar_current = array_merge($dirs, $files);
     }
 
 
@@ -49,7 +93,7 @@ class tree
      */
     protected function setup_current_pathdir(string $fpath = '')
     {
-        if ($fpath == '') $this->pathdir = $_SERVER['DOCUMENT_ROOT']
+        if($fpath == '') $this->pathdir = $_SERVER['DOCUMENT_ROOT']
             . DIRECTORY_SEPARATOR . MD_DIR . DIRECTORY_SEPARATOR;
         else $this->pathdir = $fpath;
 

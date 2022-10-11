@@ -34,9 +34,22 @@ $footer = 'footer.tpl';
 if(is_null($PAD->err))
 {
     if(is_file($PAD->fpath_fs))
-      $page_content = MarkdownExtra::defaultTransform(file_get_contents($PAD->fpath_fs));
+    {
+        $page_content = MarkdownExtra::defaultTransform(file_get_contents($PAD->fpath_fs));
+    }
     else
-      $page_content = "<h2>Каталог базы данных</h2>";
+    {
+        $page_content = "<h2>Каталог базы данных</h2>";
+        if(count($PAD->tree->ar_current)>0)
+        {
+            $page_content .= "<ul>\n";
+            foreach($PAD->tree->ar_current as $i)
+            {
+                $page_content .= "<li>$i</li>\n";
+            }
+            $page_content .= "</ul>\n";
+        }
+    }
 }
 else
 {
