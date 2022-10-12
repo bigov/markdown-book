@@ -29,12 +29,13 @@ class tree
     {
         $l = scandir($this->data_dir);
         $dirs = array();   // список всех папок верхнего уровня
+        $base = '/' . MD_DIR . '/';
 
         foreach($l as $o)
         {
             if(!str_starts_with($o, '.'))
             {
-              if(is_dir($this->data_dir . $o)) $dirs[] = $o;
+              if(is_dir($this->data_dir . $o)) $dirs[$o] = $base . $o;
             }
         }
 
@@ -44,8 +45,9 @@ class tree
           $s = array_shift($this->ar_step);
           while($n > 0)
           {
+            $id = array_key_first($dirs);
             $e = array_shift($dirs);
-            $this->ar_top[] = $e;
+            $this->ar_top[$id] =$e;
             if($e == $s) $n = 1;
             $n -= 1;
           }
@@ -61,8 +63,16 @@ class tree
         $data_dir = $_SERVER['DOCUMENT_ROOT'] 
                   . DIRECTORY_SEPARATOR 
                   . MD_DIR . DIRECTORY_SEPARATOR;
+
         $st = substr($this->pathdir, strlen($data_dir), -1);
-        $this->ar_step = explode(DIRECTORY_SEPARATOR, $st);
+        $lst = explode(DIRECTORY_SEPARATOR, $st);
+        $base = '/' . MD_DIR . '/';
+        foreach($lst as $l)
+        {
+            $this->ar_step[$l] = $base . $l;
+            $base .= $l . '/';
+        }
+
         if(empty($this->ar_step[0])) array_shift($this->ar_step);
         $this->data_dir = $data_dir;
     }

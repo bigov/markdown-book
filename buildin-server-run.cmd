@@ -1,4 +1,8 @@
 @ECHO OFF
+git pull
+cd data
+git pull
+cd ..
 SETLOCAL
 
 chcp 65001
@@ -12,4 +16,10 @@ START http://localhost:8888/
 .sys\php\php.exe -S localhost:8888 -c "%RUNDIR%.sys\php\" -t "%RUNDIR%" .sys\router.php
 
 ENDLOCAL
+cd data
+git add .
+git commit -am "daily fix"
+git push
+cd ..
+git add .
 

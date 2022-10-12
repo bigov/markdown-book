@@ -10,6 +10,9 @@ H1 {
   text-align: center;
   border-bottom: solid 2px darkgreen;
 }
+H2, H3, H4, H5, H6 {
+    margin-top: 2.5em;
+}
 strong {
   color: darkgreen;
 }

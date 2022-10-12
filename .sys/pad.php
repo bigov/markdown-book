@@ -88,22 +88,9 @@ class pad
             {
               $this->err = "ERROR 404: document not found.";
               $this->fpath_fs = '';
-              //return;
+              return;
             }
         }
         $this->tree = new tree($this->fpath_fs);
-
-        $wu = $this->cut_end($this->fpath_url, '/');
-
-        if(is_file($this->fpath_fs))
-          $wf = $this->cut_end($this->fpath_fs, DIRECTORY_SEPARATOR);
-        else
-          $wf = $this->fpath_fs;
-
-        $t = scandir($wf);
-
-        foreach ($t as $v)
-            if (is_file($wf . $v) and str_ends_with($v, '.md'))
-               $this->files_list[$v] = $wu . $v;
     }
 }
