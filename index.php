@@ -13,9 +13,9 @@ if ($_SERVER['REQUEST_URI'] == '/')
 }
 
 //require_once '.sys/php-markdown/Michelf/Markdown.inc.php';
-require_once '.sys/php-markdown/Michelf/MarkdownExtra.inc.php';
-require_once '.sys/pad.php';
-require_once '.sys/tree.php';
+require_once 'sys/php-markdown/Michelf/MarkdownExtra.inc.php';
+require_once 'sys/pad.php';
+require_once 'sys/tree.php';
 
 use Michelf\MarkdownExtra;
 $PAD = new mdb\pad();
@@ -70,6 +70,9 @@ print (file_get_contents($tpls . $header));
 print ($page_content);
 print (file_get_contents($tpls . $column));
 
+require_once("view/side_menu.php");
+//print_r($PAD->tree);
+/**
 print ('<ul id="menu">');
 print ("<li><a href='/".MD_DIR."/$file_index'>HOME</a></li>");
 foreach ($PAD->top_dir_list_url as $title => $url)
@@ -77,6 +80,7 @@ foreach ($PAD->top_dir_list_url as $title => $url)
     print ("<li><a href='$url/$file_index'>$title</a></li>");
 }
 print ("</ul>");
+ */
 
 print ('<ul id="menu">');
 foreach ($PAD->files_list as $title => $url)

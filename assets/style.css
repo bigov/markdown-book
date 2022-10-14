@@ -81,3 +81,15 @@ pre {
     border: solid 2px #505050;
     box-shadow: 4px 4px 4px #6E6E6E;
 }
+li.l1 {
+}
+li.l2 {
+    margin-left: 1em;
+}
+li.l3 {
+    margin-left: 2em;
+}
+li.l4 {
+    margin-left: 3em;
+}
+
