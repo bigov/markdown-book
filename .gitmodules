@@ -1,6 +1,0 @@
-[submodule ".sys/php-markdown"]
-	path = .sys/php-markdown
-	url = https://github.com/michelf/php-markdown.git
-[submodule "sys/php-markdown"]
-	path = sys/php-markdown
-	url = https://github.com/michelf/php-markdown.git
