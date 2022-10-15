@@ -2,7 +2,7 @@
 
 class tree
 {
-    protected string $pathdir;
+    protected string $pathdir;  // путь в файловой системе к текущему файлу/папке
     protected string $data_dir;
     protected string $base_url;  // часть URL от корня к текущему каталогу
     public array $ar_top;
@@ -29,14 +29,15 @@ class tree
     protected function setup_top_list()
     {
         $l = scandir($this->data_dir);
-        $dirs = array();   // список всех папок верхнего уровня
+        $dirs = array();   // список папок верхнего уровня
         $base = '/' . MD_DIR . '/';
 
+        // построить массив папок верхнего уровня с адресами от корня сайта
         foreach($l as $o)
         {
             if(!str_starts_with($o, '.'))
             {
-              if(is_dir($this->data_dir . $o)) $dirs[$o] = $base . $o;
+              if(is_dir($this->data_dir . $o)) $dirs["&#128193;$o"] = $base.$o;
             }
         }
 
@@ -48,7 +49,7 @@ class tree
           {
             $id = array_key_first($dirs);
             $e = array_shift($dirs);
-            $this->ar_top[$id] =$e;
+            $this->ar_top["$id "] = $e;
             if($e == $s) $n = 1;
             $n -= 1;
           }
@@ -57,7 +58,7 @@ class tree
     }
 
     /**
-     * Построение списка директорий к текущему каталогу
+     * Построение списка директорий от верхней к текущему каталогу
      */
     protected function setup_step_list()
     {
@@ -67,15 +68,15 @@ class tree
 
         $st = substr($this->pathdir, strlen($data_dir), -1);
         $lst = explode(DIRECTORY_SEPARATOR, $st);
-
-        $this->base_url = '/' . MD_DIR;
+        if(empty($lst[0])) array_shift($lst);
+        $this->base_url = '/' . MD_DIR .'/';
         foreach($lst as $l)
         {
-            $this->ar_step[$l] = $this->base_url . '/' . $l;
-            $this->base_url .= '/' . $l;
+
+            $this->ar_step["&#128193;$l"] = $this->base_url . $l;
+            $this->base_url .= $l . '/';
         }
 
-        if(empty($this->ar_step[0])) array_shift($this->ar_step);
         $this->data_dir = $data_dir;
     }
 
@@ -87,17 +88,24 @@ class tree
     {
         $l = scandir($this->pathdir);
 
-        //print_r($l);
-        //exit;
-
         $dirs = array();
         $files = array();
         foreach($l as $o)
         {
             if(!str_starts_with($o, '.'))
             {
-              if(is_file($this->pathdir . $o)) $files[$o] = $this->base_url . $o;
-              else $dirs[$o] = $this->base_url . $o;
+                if(is_file($this->pathdir . $o))
+                {
+                    if(mb_eregi("(\.pdf$)|(\.jpg$)|(\.gif$)|(\.png$)", $o))
+                       $p = "&#127745;";
+                    else
+                       $p = "&#128196;";
+                    $files[$p . $o] = $this->base_url . $o;
+                }
+                else
+                {
+                    $dirs["&#128193;$o"] = $this->base_url . $o;
+                }
             }
         }
         $this->ar_current = array_merge($dirs, $files);
@@ -107,7 +115,7 @@ class tree
     /**
      * Выбрать каталог для поиска списка файлов
      */
-    protected function setup_current_pathdir(string $fpath = '')
+    protected function setup_current_pathdir(string $fpath)
     {
         if($fpath == '') $this->pathdir = $_SERVER['DOCUMENT_ROOT']
             . DIRECTORY_SEPARATOR . MD_DIR . DIRECTORY_SEPARATOR;

@@ -1,29 +1,36 @@
 <?php
+/**
+ * &#128448; - папка закрытая
+ * &#128449; - папка открытая
+ *
+ *
+ */
 
-print("<ul>");
+//print("&#128194;"); // желтая открытая папка
+//echo "&#128193;";     // желтая папка
+$sp = "&nbsp;&nbsp;";
 
-echo "<p>top";
+$home_url = '/' . MD_DIR . '/' . $file_index;
+echo "<div class=\"side-menu\"><a href=\"$home_url\">home</a></div>\n";
+
 foreach($PAD->tree->ar_top as $k=>$v)
 {
-  echo "<li><a href=\"$v\">$k</a></li>";
+  echo "<div class=\"side-menu\"><a href=\"$v\">$k</a></div>\n";
 }
 
-echo "<p>step";
 foreach($PAD->tree->ar_step as $k=>$v)
 {
-  echo "<li class=\"l1\"><a href=\"$v\">$k</a></li>";
+    echo "<div class=\"side-menu\">$sp<a href=\"$v\">$k</a></div>\n";
+   $sp .= "&nbsp;&nbsp;";
 }
 
-echo "<p>current";
-if(count($PAD->tree->ar_current) > 0)
 foreach($PAD->tree->ar_current as $k=>$v)
 {
-  echo "<li class=\"l2\"><a href=\"$v\">$k</a></li>";
+  echo "<div class=\"side-menu\">$sp<a href=\"$v\">$k</a></div>\n";
 }
 
-
-echo "<p>bottom";
-print_r($PAD->tree->ar_bottom);
-
-print("</ul>");
+foreach($PAD->tree->ar_bottom as $k=>$v)
+{
+  echo "<div class=\"side-menu\"><a href=\"$v\">$k</a></div>\n";
+}
 

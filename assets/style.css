@@ -18,6 +18,7 @@ strong {
 }
 a {
   color: #1060B0;
+  text-decoration: none;
 }
 a:link {
   text-decoration: none;
@@ -81,15 +82,15 @@ pre {
     border: solid 2px #505050;
     box-shadow: 4px 4px 4px #6E6E6E;
 }
-li.l1 {
+div.side-menu {
+    border: none;
+    width: 100%;
+    white-space: nowrap;
 }
-li.l2 {
-    margin-left: 1em;
+div.side-menu a {
+    color: #222222;
 }
-li.l3 {
-    margin-left: 2em;
+div.side-menu a:hover {
+   color: red;
+   text-decoration: none;
 }
-li.l4 {
-    margin-left: 3em;
-}
-

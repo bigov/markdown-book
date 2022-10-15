@@ -6,13 +6,19 @@ const MD_DIR = 'data';        // папка базы данных по-умол�
 $file_index  = 'dirinfo.md';  // индекс по-умолчанию
 $tpls = 'assets/';            // папка шаблонов
 
+$page = 'page.tpl';
+$column = 'column.tpl';
+$footer = 'footer.tpl';
+
 if ($_SERVER['REQUEST_URI'] == '/')
 {
   header("Location: /".MD_DIR."/$file_index");
   exit;
 }
 
-//require_once '.sys/php-markdown/Michelf/Markdown.inc.php';
+
+require_once 'sys/tools.php';
+//require_once 'sys/php-markdown/Michelf/Markdown.inc.php';
 require_once 'sys/php-markdown/Michelf/MarkdownExtra.inc.php';
 require_once 'sys/pad.php';
 require_once 'sys/tree.php';
@@ -27,9 +33,7 @@ if (isset($_POST) and array_key_exists('editor', $_POST))
     header("Location: " . $_SERVER['SCRIPT_NAME']);
 }
 
-$header = 'header.tpl';
-$column = 'column.tpl';
-$footer = 'footer.tpl';
+print (file_get_contents($tpls . "page_header.tpl"));
 
 if(is_null($PAD->err))
 {
@@ -39,15 +43,13 @@ if(is_null($PAD->err))
     }
     else
     {
-        $page_content = "<h2>Каталог базы данных</h2>";
+        $page_content = "<h1>Список файлов</h1>";
         if(count($PAD->tree->ar_current)>0)
         {
-            $page_content .= "<ul>\n";
-            foreach($PAD->tree->ar_current as $i)
+            foreach($PAD->tree->ar_current as $i => $v)
             {
-                $page_content .= "<li>$i</li>\n";
+                $page_content .= "<div class=\"side-menu\"><a href=\"$v\">$i</a></div>\n";
             }
-            $page_content .= "</ul>\n";
         }
     }
 }
@@ -59,14 +61,14 @@ else
 
 if (array_key_exists('QUERY_STRING', $_SERVER) and str_starts_with($_SERVER['QUERY_STRING'], 'edit'))
 {
-    $header = 'header_ed.tpl';
+    $page = 'page_ed.tpl';
     $column = 'column_ed.tpl';
     $page_content = file_get_contents($PAD->fpath_fs);
 }
 
 // Рендер HTML страницы в клиентский браузер
 
-print (file_get_contents($tpls . $header));
+print (file_get_contents($tpls . $page));
 print ($page_content);
 print (file_get_contents($tpls . $column));
 
