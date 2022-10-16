@@ -1,5 +1,5 @@
 <hr />
-<a href="?edit">edit</a>
+%s
 </td>
 </tr></table>
 </body>

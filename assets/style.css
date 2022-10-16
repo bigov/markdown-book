@@ -73,14 +73,24 @@ img {
 pre {
     width: inherit;
     padding: 0.6em 0.6em 1.2em 0.6em;
-    color: #F0F0F0;
-    background-color: #444444;
+    color: #000000;
+    background-color: #EEEEEE;
     font-family: monospace;
-    font-size: 110%;
-    line-height: 1.25em;
+    line-height: 1.3em;
     overflow: scroll;
-    border: solid 2px #505050;
-    box-shadow: 4px 4px 4px #6E6E6E;
+    border: solid 1px #BBBBBB;
+    box-shadow: 4px 4px 4px #BBBBBB;
+}
+code {
+    font-size: 130%;
+    background-color: #EEEEEE;
+    padding: 0 0.25em 0 0.25em;
+    color: #000000;
+}
+pre code {
+    padding: 0;
+    background-color: none;
+    font-size: 110%;
 }
 div.side-menu {
     border: none;
@@ -93,4 +103,14 @@ div.side-menu a {
 div.side-menu a:hover {
    color: red;
    text-decoration: none;
+}
+div.files-list {
+    border: none;
+    width: 250px;
+    float: left;
+    margin-bottom: 0.5em;
+}
+div.files-list a:hover {
+   text-decoration: none;
+   color: red;
 }
