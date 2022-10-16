@@ -7,46 +7,28 @@ $file_index  = 'dirinfo.md';  // индекс по-умолчанию
 
 $tpls = 'assets' . DIRECTORY_SEPARATOR;            // папка шаблонов
 $page = 'page.tpl';
-$column = 'column.tpl';
 $footer = 'footer.tpl';
 
-if ($_SERVER['REQUEST_URI'] == '/')
-{
-  header("Location: /".MD_DIR."/$file_index");
-  exit;
-}
-
 require_once 'sys/tools.php';
-//require_once 'sys/php-markdown/Michelf/Markdown.inc.php';
-require_once 'sys/php-markdown/Michelf/MarkdownExtra.inc.php';
-require_once 'sys/pad.php';
-require_once 'sys/tree.php';
 
-use Michelf\MarkdownExtra;
 $PAD = new mdb\pad();
 
 //print_html_page($PAD);
 
-// Если получен запрос с новым текстом, то записать и вернуться к файлу
-if (isset($_POST) and array_key_exists('editor', $_POST))
-{
-    file_put_contents($PAD->fpath_fs, $_POST['editor']);
-    header("Location: " . $_SERVER['SCRIPT_NAME']);
-}
 
-
+use Michelf\MarkdownExtra;
 if(is_null($PAD->err))
 {
   if(is_file($PAD->fpath_fs))
   {
-      $page_content =
-          MarkdownExtra::defaultTransform(
-              file_get_contents($PAD->fpath_fs)
-          );
+    $page_content =
+      MarkdownExtra::defaultTransform(file_get_contents($PAD->fpath_fs));
   }
   elseif(is_file($PAD->fpath_fs . $file_index))
   {
-    header("Location: " . $_SERVER['SCRIPT_NAME'] . '/' . $file_index);
+    $location = $_SERVER['SCRIPT_NAME'];
+    if(!str_ends_with($location, '/')) $location .= '/';
+      header("Location: " . $location . $file_index);
   }
   else
   {
@@ -73,15 +55,17 @@ print (file_get_contents($tpls . "page_header.tpl"));
 if (array_key_exists('QUERY_STRING', $_SERVER) and str_starts_with($_SERVER['QUERY_STRING'], 'edit'))
 {
     $page = 'page_ed.tpl';
-    $column = 'column_ed.tpl';
+    $column_content = sprintf(file_get_contents($tpls . 'column_ed.tpl'), $PAD->fpath_fs);
     $page_content = file_get_contents($PAD->fpath_fs);
+} else {
+    $column_content = file_get_contents($tpls . 'column.tpl');
 }
 
 // Рендер HTML страницы в клиентский браузер
 
 print (file_get_contents($tpls . $page));
 print ($page_content);
-print (file_get_contents($tpls . $column));
+print ($column_content);
 
 require_once("view/side_menu.php");
 print (file_get_contents($tpls . $footer));

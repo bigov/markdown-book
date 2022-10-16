@@ -20,6 +20,7 @@ class pad
         $this->init_query_str();
         $this->init_top_dir_list();
         $this->init_files_list();
+        $this->tree = new tree($this->fpath_fs);
     }
 
     /**
@@ -87,10 +88,9 @@ class pad
             if(!is_dir($this->fpath_fs))
             {
               $this->err = "ERROR 404: document not found.";
-              $this->fpath_fs = '';
+              $this->fpath_fs = $this->dbpath_fs;
               return;
             }
         }
-        $this->tree = new tree($this->fpath_fs);
     }
 }

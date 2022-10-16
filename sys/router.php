@@ -10,7 +10,7 @@
 if (str_ends_with  ($_SERVER['SCRIPT_FILENAME'], '.md' ) or
     str_starts_with($_SERVER['SCRIPT_FILENAME'], 'sys'))
 {
-    require_once 'index.php'; // для файлов .md и несуществующих файлов
+    require_once 'sys/index.php'; // для файлов .md и несуществующих файлов
 } else {
     return false;             // все остальное отдаем напрямую
 }
