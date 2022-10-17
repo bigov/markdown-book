@@ -1,8 +1,8 @@
 @ECHO OFF
-::git pull
-::cd data
-::git pull
-::cd ..
+git pull
+cd data
+git pull
+cd ..
 
 SETLOCAL
 chcp 65001
