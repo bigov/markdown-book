@@ -1,4 +1,6 @@
 <?php
+//phpinfo();
+//exit;
 
 // Любые обращения за пределы папки MD_DIR "пресекаются"
 if(!str_starts_with($_SERVER['REQUEST_URI'], '/' . MD_DIR))
@@ -16,9 +18,9 @@ if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('f
 }
 
 //require_once 'sys/php-markdown/Michelf/Markdown.inc.php';
-require_once 'sys/php-markdown/Michelf/MarkdownExtra.inc.php';
-require_once 'sys/pad.php';
-require_once 'sys/tree.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sys/php-markdown/Michelf/MarkdownExtra.inc.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sys/pad.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sys/tree.php';
 
 use Michelf\MarkdownExtra;
 
@@ -36,7 +38,7 @@ function _DBG($v, $s = '')
 
 function edit_text($PAD)
 {
-    $tpls = 'assets' . DIRECTORY_SEPARATOR;            // папка шаблонов
+    $tpls = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;            // папка шаблонов
     $editor = file_get_contents($tpls . 'editor.tpl');
     $page_content = file_get_contents($PAD->fpath_fs);
 
@@ -46,7 +48,7 @@ function edit_text($PAD)
 
 function print_html_page($PAD)
 {
-    $tpls = 'assets' . DIRECTORY_SEPARATOR;          // папка шаблонов
+    $tpls = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;          // папка шаблонов
     $page_content = '';
 
     if (array_key_exists('QUERY_STRING', $_SERVER) and str_starts_with($_SERVER['QUERY_STRING'], 'edit'))
