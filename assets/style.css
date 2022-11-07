@@ -35,7 +35,12 @@ a:hover {
 a:active {
   text-decoration: underline;
 }
-
+th {
+    background-color: #777777;
+    color: #FFFFFF;
+    padding: 0.5em;
+    font-size: 90%;
+}
 HR {
   color: darkgreen;
 }
