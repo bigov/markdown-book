@@ -1,5 +1,9 @@
 <?php namespace mdb;
 
+define("ICO_DIR", "<span class=\"icon\">&#128193;</span>"); // Иконка папки
+define("ICO_TXT", "<span class=\"icon\">&#128196;</span>"); // Иконка текстового документа
+define("ICO_PIC", "<span class=\"icon\">&#127745;</span>"); // Иконка изображения
+
 class tree
 {
     protected string $pathdir;  // путь в файловой системе к текущему файлу/папке
@@ -12,6 +16,7 @@ class tree
 
     public function __construct( string $fpath = '' )
     {
+
         $this->ar_top = array();
         $this->ar_step = array();
         $this->ar_current = array();
@@ -37,7 +42,7 @@ class tree
         {
             if(!str_starts_with($o, '.'))
             {
-              if(is_dir($this->data_dir . $o)) $dirs["&#128193;$o"] = $base.$o;
+              if(is_dir($this->data_dir . $o)) $dirs[ICO_DIR.$o] = $base.$o;
             }
         }
 
@@ -73,7 +78,7 @@ class tree
         foreach($lst as $l)
         {
 
-            $this->ar_step["&#128193;$l"] = $this->base_url . $l;
+            $this->ar_step[ICO_DIR.$l] = $this->base_url . $l;
             $this->base_url .= $l . '/';
         }
 
@@ -97,14 +102,14 @@ class tree
                 if(is_file($this->pathdir . $o))
                 {
                     if(mb_eregi("(\.pdf$)|(\.jpg$)|(\.gif$)|(\.png$)", $o))
-                       $p = "&#127745;";
+                       $p = ICO_PIC;
                     else
-                       $p = "&#128196;";
+                       $p = ICO_TXT;
                     $files[$p . $o] = $this->base_url . $o;
                 }
                 else
                 {
-                    $dirs["&#128193;$o"] = $this->base_url . $o;
+                    $dirs[ICO_DIR.$o] = $this->base_url . $o;
                 }
             }
         }
