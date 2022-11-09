@@ -78,6 +78,13 @@ input {
   background-color: #BCDCF4;
   border-width: thin;
 }
+.search input {
+  background-color: transparent;
+  margin: 0 0 10px 0;
+  padding: 0.2em;
+  font-size: 100%;
+  border: solid 1px #BBBBBB;
+}
 img {
     max-width: 100%;
     max-height: 100%;

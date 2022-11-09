@@ -10,13 +10,26 @@ if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('f
     exit;
 }
 
+// Если получен запрос на поиск
+if (isset($_POST) and array_key_exists('needle', $_POST))
+{
+    $need = $_POST['needle'];
+    print($need);
+
+    // https://snipp.ru/php/search-files
+    $md_files = glob(WMDB . "/**.md");
+    echo "<PRE>";
+    print_r($md_files);
+
+    exit;
+}
+
 //require_once 'sys/php-markdown/Michelf/Markdown.inc.php';
 require_once 'sys/php-markdown/Michelf/MarkdownExtra.inc.php';
 require_once 'sys/pad.php';
 require_once 'sys/tree.php';
 
 use Michelf\MarkdownExtra;
-
 
 function _DBG($v, $s = '')
 {
@@ -103,9 +116,18 @@ function side_menu($PAD)
   $home_url = '/' . DIR_INDEX;
 
   $side_menu = "
-</td><td width=\"200px\" valign=\"top\" style=\"padding: 4em 0 0 2em;\">
-<strong>содержание</strong>
-<div class=\"side-menu\"><a href=\"$home_url\">home</a></div>\n";
+</td><td width=\"200px\" valign=\"top\" style=\"padding: 1em 0 0 2em;\">
+
+
+<div class=\"search\">
+  <form action=\"\" method=\"post\">
+    <input type=\"text\" name=\"needle\" placeholder=\"поиск\"/>
+    <input type=\"submit\" value=\"search\" style=\"display:none;\"/>
+  </form>
+</div>
+
+
+<div class=\"side-menu\"><a href=\"$home_url\"><h4>К началу</h4></a></div>\n";
 
   foreach($PAD->tree->ar_top as $k=>$v)
   {

@@ -3,7 +3,6 @@
 SETLOCAL
 chcp 65001
 SET RUNDIR=%~dp0
-SET PATH=%windir%;%windir%\system32;%RUNDIR%;%RUNDIR%sys\php
 SET "WMDB=%1"
 ECHO.
 ECHO Starting development php-server
