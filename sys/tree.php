@@ -1,13 +1,8 @@
 <?php namespace mdb;
 
-define("ICO_DIR", "<span class=\"icon\">&#128193;</span>"); // Иконка папки
-define("ICO_TXT", "<span class=\"icon\">&#128196;</span>"); // Иконка текстового документа
-define("ICO_PIC", "<span class=\"icon\">&#127745;</span>"); // Иконка изображения
-
 class tree
 {
     protected string $pathdir;  // путь в файловой системе к текущему файлу/папке
-    protected string $data_dir;
     protected string $base_url;  // часть URL от корня к текущему каталогу
     public array $ar_top;
     public array $ar_step;
@@ -33,16 +28,16 @@ class tree
      */
     protected function setup_top_list()
     {
-        $l = scandir($this->data_dir);
+        $l = scandir(WMDB);
         $dirs = array();   // список папок верхнего уровня
-        $base = '/' . MD_DIR . '/';
+        $base = '/';
 
         // построить массив папок верхнего уровня с адресами от корня сайта
         foreach($l as $o)
         {
             if(!str_starts_with($o, '.'))
             {
-              if(is_dir($this->data_dir . $o)) $dirs[ICO_DIR.$o] = $base.$o;
+              if(is_dir(WMDB . '/' . $o)) $dirs[ICO_DIR.$o] = $base.$o;
             }
         }
 
@@ -67,22 +62,15 @@ class tree
      */
     protected function setup_step_list()
     {
-        $data_dir = $_SERVER['DOCUMENT_ROOT'] 
-                  . DIRECTORY_SEPARATOR 
-                  . MD_DIR . DIRECTORY_SEPARATOR;
-
-        $st = substr($this->pathdir, strlen($data_dir), -1);
-        $lst = explode(DIRECTORY_SEPARATOR, $st);
+        $st = substr($this->pathdir, strlen(WMDB), -1);
+        $lst = explode('/', $st);
         if(empty($lst[0])) array_shift($lst);
-        $this->base_url = '/' . MD_DIR .'/';
+        $this->base_url = '/';
         foreach($lst as $l)
         {
-
-            $this->ar_step[ICO_DIR.$l] = $this->base_url . $l;
+            $this->ar_step[ICO_DIR . $l] = $this->base_url . $l;
             $this->base_url .= $l . '/';
         }
-
-        $this->data_dir = $data_dir;
     }
 
 
@@ -122,13 +110,12 @@ class tree
      */
     protected function setup_current_pathdir(string $fpath)
     {
-        if($fpath == '') $this->pathdir = $_SERVER['DOCUMENT_ROOT']
-            . DIRECTORY_SEPARATOR . MD_DIR . DIRECTORY_SEPARATOR;
+        if($fpath == '') $this->pathdir = WMDB . '/';
         else $this->pathdir = $fpath;
 
         if(is_file($this->pathdir))
-            $this->pathdir = dirname($this->pathdir)
-            . DIRECTORY_SEPARATOR;
+            $this->pathdir = dirname($this->pathdir) . '/';
+        else $this->pathdir .= '/';
     }
 }
 

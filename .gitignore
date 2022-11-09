@@ -1,5 +1,6 @@
 data/
 sys/php/
+sys/config.php
 *.swp
 *.md~
 

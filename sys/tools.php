@@ -2,13 +2,6 @@
 //phpinfo();
 //exit;
 
-// Любые обращения за пределы папки MD_DIR "пресекаются"
-if(!str_starts_with($_SERVER['REQUEST_URI'], '/' . MD_DIR))
-{
-    header("Location: /".MD_DIR."/$file_index");
-    exit;
-}
-
 // Если получен запрос с новым текстом, то записать и вернуться к файлу
 if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('filepathdir', $_POST))
 {
@@ -18,9 +11,9 @@ if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('f
 }
 
 //require_once 'sys/php-markdown/Michelf/Markdown.inc.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/sys/php-markdown/Michelf/MarkdownExtra.inc.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/sys/pad.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/sys/tree.php';
+require_once 'sys/php-markdown/Michelf/MarkdownExtra.inc.php';
+require_once 'sys/pad.php';
+require_once 'sys/tree.php';
 
 use Michelf\MarkdownExtra;
 
@@ -38,17 +31,15 @@ function _DBG($v, $s = '')
 
 function edit_text($PAD)
 {
-    $tpls = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;            // папка шаблонов
-    $editor = file_get_contents($tpls . 'editor.tpl');
+    $editor = file_get_contents('assets/editor.tpl');
     $page_content = file_get_contents($PAD->fpath_fs);
-
     return sprintf($editor, $page_content, $PAD->fpath_fs);
 }
 
 
 function print_html_page($PAD)
 {
-    $tpls = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;          // папка шаблонов
+    $tpls = 'assets/';          // папка шаблонов
     $page_content = '';
 
     if (array_key_exists('QUERY_STRING', $_SERVER) and str_starts_with($_SERVER['QUERY_STRING'], 'edit'))
@@ -73,7 +64,6 @@ function print_html_page($PAD)
 
 function display_text($PAD)
 {
-  $file_index  = 'dirinfo.md';  // индекс по-умолчанию
   $page_content = '';
 
   if(is_null($PAD->err))
@@ -82,12 +72,12 @@ function display_text($PAD)
     { // Если произошло обращение к существующему файлу, то обработать его
       $page_content = MarkdownExtra::defaultTransform(file_get_contents($PAD->fpath_fs));
     }
-    elseif(is_file($PAD->fpath_fs . $file_index))
+    elseif(is_file($PAD->fpath_fs . DIR_INDEX))
     { // Если получено обращение к директории, в которой есть индексный файло,
       // то перенаправить клиентский браузер на этот файл
       $location = $_SERVER['SCRIPT_NAME'];
       if(!str_ends_with($location, '/')) $location .= '/';
-        header("Location: " . $location . $file_index);
+        header("Location: " . $location . DIR_INDEX);
     }
     else
     { // Если в директории индексного файла не найдено, то вывести список имеющихся файлов
@@ -109,9 +99,8 @@ function display_text($PAD)
  */
 function side_menu($PAD)
 {
-  $file_index  = 'dirinfo.md';  // индекс по-умолчанию
   $sp = "&nbsp;&nbsp;";
-  $home_url = '/' . MD_DIR . '/' . $file_index;
+  $home_url = '/' . DIR_INDEX;
 
   $side_menu = "
 </td><td width=\"200px\" valign=\"top\" style=\"padding: 4em 0 0 2em;\">
