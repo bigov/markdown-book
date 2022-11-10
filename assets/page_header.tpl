@@ -137,6 +137,12 @@ span.icon {
     margin: 0 0 0 0;
     padding: 0 0.16em 0 0;
 }
+span.backlighting {
+    color: red;
+    background: yellow;
+    font-weight: bold;
+}
+
 </style>
 
 </head><body>

@@ -13,13 +13,28 @@ if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('f
 // Если получен запрос на поиск
 if (isset($_POST) and array_key_exists('needle', $_POST))
 {
-    $need = $_POST['needle'];
-    print($need);
+    $needle = $_POST['needle'];
+    print($needle);
 
     // https://snipp.ru/php/search-files
-    $md_files = glob(WMDB . "/**.md");
+    $md_files = recurse_files_list(WMDB, "*.md");
     echo "<PRE>";
-    print_r($md_files);
+    foreach($md_files as $filename)
+    {
+        $handle = fopen($filename, "r");
+        $contents = fread($handle, filesize($filename));
+        fclose($handle);
+        $n = stripos($contents, $needle);
+        if(is_int($n))
+        {
+            $base = substr($filename, strlen(WMDB));
+            $base = str_replace("\\", "/", $base);
+            print($n . ": ");
+            $url = $base . '?backlighting=' . $needle;
+            print("<a href=\"$url\">" . $filename . "</a>");
+            print("\n");
+        }
+    }
 
     exit;
 }
@@ -30,6 +45,17 @@ require_once 'sys/pad.php';
 require_once 'sys/tree.php';
 
 use Michelf\MarkdownExtra;
+
+function recurse_files_list($dir, $pattern)
+{
+    $files_list = glob($dir . DIRECTORY_SEPARATOR . $pattern);
+    $folders_list = glob($dir . DIRECTORY_SEPARATOR . "*", GLOB_ONLYDIR);
+
+    foreach($folders_list as $f) $files_list = array_merge($files_list,
+      recurse_files_list($f, $pattern));
+
+    return $files_list;
+}
 
 function _DBG($v, $s = '')
 {
@@ -83,7 +109,12 @@ function display_text($PAD)
   {
     if(is_file($PAD->fpath_fs))
     { // Если произошло обращение к существующему файлу, то обработать его
-      $page_content = MarkdownExtra::defaultTransform(file_get_contents($PAD->fpath_fs));
+        $page_content = MarkdownExtra::defaultTransform(file_get_contents($PAD->fpath_fs));
+        if(array_key_exists('backlighting', $_GET))
+        {
+          $txt = $_GET["backlighting"];
+          $page_content = str_ireplace($txt, "<span class=\"backlighting\">$txt</span>", $page_content);
+        }
     }
     elseif(is_file($PAD->fpath_fs . DIR_INDEX))
     { // Если получено обращение к директории, в которой есть индексный файло,
