@@ -79,10 +79,15 @@ class tree
      */
     protected function setup_tree_list()
     {
-        $l = scandir($this->pathdir);
-
         $dirs = array();
         $files = array();
+        $l = array();
+
+        if(is_dir($this->pathdir))
+          $l = scandir($this->pathdir);
+        else
+          return;
+
         foreach($l as $o)
         {
             if(!str_starts_with($o, '.'))
