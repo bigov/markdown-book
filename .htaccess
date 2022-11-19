@@ -1,4 +1,0 @@
-RewriteEngine on
-RewriteRule ^sys  sys/index.php
-RewriteRule \.md$ sys/index.php
-
