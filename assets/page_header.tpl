@@ -111,10 +111,34 @@ pre code {
     background-color: none;
     font-size: 110%;
 }
+
+div.set-mode {
+    border: none;
+    white-space: nowrap;
+    padding: 0;
+}
+div.mode-btn {
+    display: inline-block;
+    border: solid 1px #555;
+    font-size: 120%;
+    text-align: center;
+    background-color: #888;
+    width: 42px;
+    margin: 0 0 0 0;
+}
+span.button {
+    background-color: #888;
+    color: #FFFFFF;
+    padding: 0;
+}
 div.side-menu {
     border: none;
     width: 100%;
     white-space: nowrap;
+}
+div.side-menu h4 {
+    margin-top: 1em;
+    margin-bottom: 0.8em;
 }
 div.side-menu a {
     color: #222222;

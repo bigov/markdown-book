@@ -70,7 +70,7 @@ function _DBG($v, $s = '')
 
 function edit_text($PAD)
 {
-    $editor = file_get_contents('assets/editor.tpl');
+    $editor = file_get_contents(FOLDER_TPLS. "/editor.tpl");
     $page_content = file_get_contents($PAD->fpath_fs);
     return sprintf($editor, $page_content, $PAD->fpath_fs);
 }
@@ -78,7 +78,6 @@ function edit_text($PAD)
 
 function print_html_page($PAD)
 {
-    $tpls = 'assets/';          // папка шаблонов
     $page_content = '';
 
     if (array_key_exists('QUERY_STRING', $_SERVER) and str_starts_with($_SERVER['QUERY_STRING'], 'edit'))
@@ -89,15 +88,20 @@ function print_html_page($PAD)
       $page_content = display_text($PAD);
     }
 
-    print(file_get_contents($tpls . "page_header.tpl"));
+    print(file_get_contents(FOLDER_TPLS. "/page_header.tpl"));
     print($page_content);
-    print(side_menu($PAD));
 
-    $footer = file_get_contents($tpls . 'footer.tpl');
-    $edit_link = '';
-    if(is_null($PAD->err)) $edit_link = '<a href="?edit">edit</a>';
+    $edit_link = "";
+    $create_folder_link = "";
+    $create_doc_link = "";
+    $delete_link = "";
 
-    print(sprintf($footer, $edit_link));
+    if(is_null($PAD->err)) $edit_link = "?edit";
+
+    print(side_menu($PAD, $edit_link, $create_folder_link, $create_doc_link, $delete_link));
+
+    $footer = file_get_contents(FOLDER_TPLS. "/footer.tpl");
+    print($footer);
 }
 
 
@@ -141,41 +145,39 @@ function display_text($PAD)
 /**
  * Формирование бокового меню навигации по базе данных
  */
-function side_menu($PAD)
+function side_menu($PAD, $edit_link, $create_folder_link, $create_doc_link, $delete_link)
 {
   $sp = "&nbsp;&nbsp;";
   $home_url = '/' . DIR_INDEX;
 
-  $side_menu = "
-</td><td width=\"200px\" valign=\"top\" style=\"padding: 1em 0 0 2em;\">
+  $side_menu = "</td><td width=\"200px\" valign=\"top\" style=\"padding: 1em 0 0 2em;\">";
+  $side_menu .= sprintf(
+      file_get_contents(FOLDER_TPLS . "/mode_menu.tpl"),
+      $edit_link, ICO_EDIT, $create_folder_link, ICO_NEW_DIR,
+      $create_doc_link, ICO_NEW_DOC, $delete_link, ICO_DELETE
+  );
+  $side_menu .= "<div class=\"side-menu\"><a href=\"$home_url\"><h4>К началу</h4></a></div>\n";
 
-
-<div class=\"search\">
-  <form action=\"\" method=\"post\">
-    <input type=\"text\" name=\"needle\" placeholder=\"поиск\"/>
-    <input type=\"submit\" value=\"search\" style=\"display:none;\"/>
-  </form>
-</div>
-
-
-<div class=\"side-menu\"><a href=\"$home_url\"><h4>К началу</h4></a></div>\n";
-
+  // Верхняя часть дерева меню
   foreach($PAD->tree->ar_top as $k=>$v)
   {
     $side_menu .= sprintf("<div class=\"side-menu\"><a href=\"%s\">%s</a></div>\n", $v, $k);
   }
 
+  // Отображение иерархии вложенных папок
   foreach($PAD->tree->ar_step as $k=>$v)
   {
     $side_menu .= sprintf("<div class=\"side-menu\">%s<a href=\"%s\">%s</a></div>\n", $sp, $v, $k);
     $sp .= "&nbsp;&nbsp;";
   }
 
+  // Список документов текущего уровня
   foreach($PAD->tree->ar_current as $k=>$v)
   {
      $side_menu .= "<div class=\"side-menu\">$sp<a href=\"$v\">$k</a></div>\n";
   }
 
+  // Нижняя часть верхнего уровня в иерархии папок
   foreach($PAD->tree->ar_bottom as $k=>$v)
   {
     $side_menu .= "<div class=\"side-menu\"><a href=\"$v\">$k</a></div>\n";
