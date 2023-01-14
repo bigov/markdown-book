@@ -131,6 +131,11 @@ span.button {
     color: #FFFFFF;
     padding: 0;
 }
+div.mode-btn:hover, div.mode-btn:hover span{
+    border-color: darkgreen;
+    color: yellow;
+    background: green;
+}
 div.side-menu {
     border: none;
     width: 100%;

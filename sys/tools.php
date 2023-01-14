@@ -16,7 +16,6 @@ if (isset($_POST) and array_key_exists('needle', $_POST))
     $needle = $_POST['needle'];
     print($needle);
 
-    // https://snipp.ru/php/search-files
     $md_files = recurse_files_list(WMDB, "*.md");
     echo "<PRE>";
     foreach($md_files as $filename)
