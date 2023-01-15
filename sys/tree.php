@@ -9,15 +9,14 @@ class tree
     public array $ar_current;
     public array $ar_bottom;
 
-    public function __construct( string $fpath = '' )
+    public function __construct()
     {
-
         $this->ar_top = array();
         $this->ar_step = array();
         $this->ar_current = array();
         $this->ar_bottom = array();
 
-        $this->setup_current_pathdir($fpath);
+        $this->setup_current_pathdir(CONTENT_LOCATION);
         $this->setup_step_list();
         $this->setup_tree_list();
         $this->setup_top_list();

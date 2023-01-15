@@ -1,6 +1,6 @@
 <?php
-//phpinfo();
-//exit;
+
+use Michelf\MarkdownExtra;
 
 // Если получен запрос с новым текстом, то записать и вернуться к файлу
 if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('filepathdir', $_POST))
@@ -38,12 +38,6 @@ if (isset($_POST) and array_key_exists('needle', $_POST))
     exit;
 }
 
-//require_once 'sys/php-markdown/Michelf/Markdown.inc.php';
-require_once 'sys/php-markdown/Michelf/MarkdownExtra.inc.php';
-require_once 'sys/pad.php';
-require_once 'sys/tree.php';
-
-use Michelf\MarkdownExtra;
 
 function recurse_files_list($dir, $pattern)
 {
@@ -67,74 +61,68 @@ function _DBG($v, $s = '')
 }
 
 
-function edit_text($PAD)
+function edit_text()
 {
     $editor = file_get_contents(FOLDER_TPLS. "/editor.tpl");
-    $page_content = file_get_contents($PAD->fpath_fs);
-    return sprintf($editor, $page_content, $PAD->fpath_fs);
+    $page_content = file_get_contents(CONTENT_LOCATION);
+    return sprintf($editor, $page_content, CONTENT_LOCATION);
 }
 
 
-function print_html_page($PAD)
+function print_html_page($TREE)
 {
-    $page_content = '';
+  // Вывод в браузер стандартного заголовка страницы
+  print(file_get_contents(FOLDER_TPLS. "/head_p1.tpl"));
+  print("<style>" . file_get_contents(FOLDER_TPLS. "/wiki.css") . "</style>");
+  print(file_get_contents(FOLDER_TPLS. "/head_p2.tpl"));
 
-    if (array_key_exists('QUERY_STRING', $_SERVER) and str_starts_with($_SERVER['QUERY_STRING'], 'edit'))
-    {
-      $page_content = edit_text($PAD);
-    } else
-    {
-      $page_content = display_text($PAD);
-    }
+  $page_content = '';
+  if (array_key_exists('QUERY_STRING', $_SERVER) and str_starts_with($_SERVER['QUERY_STRING'], 'edit'))
+  {
+    $page_content = edit_text();
+  } else
+  {
+    $page_content = display_text($TREE);
+  }
+  print($page_content);
 
-    print(file_get_contents(FOLDER_TPLS. "/page_header.tpl"));
-    print($page_content);
+  $create_folder_link = "";
+  $create_doc_link = "";
+  $delete_link = "";
+  $edit_link = "?edit";
 
-    $edit_link = "";
-    $create_folder_link = "";
-    $create_doc_link = "";
-    $delete_link = "";
+  print(side_menu($TREE, $edit_link, $create_folder_link, $create_doc_link, $delete_link));
 
-    if(is_null($PAD->err)) $edit_link = "?edit";
-
-    print(side_menu($PAD, $edit_link, $create_folder_link, $create_doc_link, $delete_link));
-
-    $footer = file_get_contents(FOLDER_TPLS. "/footer.tpl");
-    print($footer);
+  $footer = file_get_contents(FOLDER_TPLS. "/footer.tpl");
+  print($footer);
 }
 
 
-function display_text($PAD)
+function display_text($TREE)
 {
   $page_content = '';
 
-  if(is_null($PAD->err))
-  {
-    if(is_file($PAD->fpath_fs))
-    { // Если произошло обращение к существующему файлу, то обработать его
-        $page_content = MarkdownExtra::defaultTransform(file_get_contents($PAD->fpath_fs));
-        if(array_key_exists('backlighting', $_GET))
-        {
-          $txt = $_GET["backlighting"];
-          $page_content = str_ireplace($txt, "<span class=\"backlighting\">$txt</span>", $page_content);
-        }
-    }
-    elseif(is_file($PAD->fpath_fs . DIR_INDEX))
-    { // Если получено обращение к директории, в которой есть индексный файло,
-      // то перенаправить клиентский браузер на этот файл
-      $location = $_SERVER['SCRIPT_NAME'];
-      if(!str_ends_with($location, '/')) $location .= '/';
-        header("Location: " . $location . DIR_INDEX);
-    }
-    else
-    { // Если в директории индексного файла не найдено, то вывести список имеющихся файлов
-      $page_content = "<h1>Список файлов</h1>";
-      foreach($PAD->tree->ar_current as $i => $v)
-        $page_content .= sprintf("<div class=\"files-list\"><a href=\"%s\">%s</a></div>\n", $v, $i);
-    }
-  } else
-  { // если произошла ошибка, то сформировать сообщение о ней
-    $page_content = '<H2>' . $PAD->err . '</H2>';
+  if(is_file(CONTENT_LOCATION))
+  { // Если произошло обращение к существующему файлу, то обработать его
+      $page_content = MarkdownExtra::defaultTransform(file_get_contents(CONTENT_LOCATION));
+      if(array_key_exists('backlighting', $_GET))
+      {
+        $txt = $_GET["backlighting"];
+        $page_content = str_ireplace($txt, "<span class=\"backlighting\">$txt</span>", $page_content);
+      }
+  }
+  elseif(is_file(CONTENT_LOCATION . DIR_INDEX))
+  { // Если получено обращение к директории, в которой есть индексный файло,
+    // то перенаправить клиентский браузер на этот файл
+    $location = $_SERVER['SCRIPT_NAME'];
+    if(!str_ends_with($location, '/')) $location .= '/';
+      header("Location: " . $location . DIR_INDEX);
+  }
+  else
+  { // Если в директории индексного файла не найдено, то вывести список имеющихся файлов
+    $page_content = "<h1>Список файлов</h1>";
+    foreach($TREE->ar_current as $i => $v)
+      $page_content .= sprintf("<div class=\"files-list\"><a href=\"%s\">%s</a></div>\n", $v, $i);
   }
 
   return $page_content;
@@ -144,7 +132,7 @@ function display_text($PAD)
 /**
  * Формирование бокового меню навигации по базе данных
  */
-function side_menu($PAD, $edit_link, $create_folder_link, $create_doc_link, $delete_link)
+function side_menu($TREE, $edit_link, $create_folder_link, $create_doc_link, $delete_link)
 {
   $sp = "&nbsp;&nbsp;";
   $home_url = '/' . DIR_INDEX;
@@ -158,26 +146,26 @@ function side_menu($PAD, $edit_link, $create_folder_link, $create_doc_link, $del
   $side_menu .= "<div class=\"side-menu\"><a href=\"$home_url\"><h4>К началу</h4></a></div>\n";
 
   // Верхняя часть дерева меню
-  foreach($PAD->tree->ar_top as $k=>$v)
+  foreach($TREE->ar_top as $k=>$v)
   {
     $side_menu .= sprintf("<div class=\"side-menu\"><a href=\"%s\">%s</a></div>\n", $v, $k);
   }
 
   // Отображение иерархии вложенных папок
-  foreach($PAD->tree->ar_step as $k=>$v)
+  foreach($TREE->ar_step as $k=>$v)
   {
     $side_menu .= sprintf("<div class=\"side-menu\">%s<a href=\"%s\">%s</a></div>\n", $sp, $v, $k);
     $sp .= "&nbsp;&nbsp;";
   }
 
   // Список документов текущего уровня
-  foreach($PAD->tree->ar_current as $k=>$v)
+  foreach($TREE->ar_current as $k=>$v)
   {
      $side_menu .= "<div class=\"side-menu\">$sp<a href=\"$v\">$k</a></div>\n";
   }
 
   // Нижняя часть верхнего уровня в иерархии папок
-  foreach($PAD->tree->ar_bottom as $k=>$v)
+  foreach($TREE->ar_bottom as $k=>$v)
   {
     $side_menu .= "<div class=\"side-menu\"><a href=\"$v\">$k</a></div>\n";
   }

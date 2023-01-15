@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>MD notepad</title>
+<link rel="stylesheet" href="/css/spectre.css">
 
 <style>
 body {
