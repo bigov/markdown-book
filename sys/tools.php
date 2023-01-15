@@ -2,43 +2,6 @@
 
 use Michelf\MarkdownExtra;
 
-// Если получен запрос с новым текстом, то записать и вернуться к файлу
-if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('filepathdir', $_POST))
-{
-    file_put_contents($_POST['filepathdir'], $_POST['mdtext']);
-    header("Location: " . $_SERVER['SCRIPT_NAME']);
-    exit;
-}
-
-// Если получен запрос на поиск
-if (isset($_POST) and array_key_exists('needle', $_POST))
-{
-    $needle = $_POST['needle'];
-    print($needle);
-
-    $md_files = recurse_files_list(WMDB, "*.md");
-    echo "<PRE>";
-    foreach($md_files as $filename)
-    {
-        $handle = fopen($filename, "r");
-        $contents = fread($handle, filesize($filename));
-        fclose($handle);
-        $n = stripos($contents, $needle);
-        if(is_int($n))
-        {
-            $base = substr($filename, strlen(WMDB));
-            $base = str_replace("\\", "/", $base);
-            print($n . ": ");
-            $url = $base . '?backlighting=' . $needle;
-            print("<a href=\"$url\">" . $filename . "</a>");
-            print("\n");
-        }
-    }
-
-    exit;
-}
-
-
 function recurse_files_list($dir, $pattern)
 {
     $files_list = glob($dir . DIRECTORY_SEPARATOR . $pattern);
@@ -84,11 +47,16 @@ function print_html_page($TREE)
   {
     $page_content = display_text($TREE);
   }
+
+  if(defined('CONTENT_PREFIX')){
+      $page_content = CONTENT_PREFIX . $page_content;
+  }
+
   print($page_content);
 
   $create_folder_link = "";
   $create_doc_link = "";
-  $delete_link = "";
+  $delete_link = "?delete";
   $edit_link = "?edit";
 
   print(side_menu($TREE, $edit_link, $create_folder_link, $create_doc_link, $delete_link));
