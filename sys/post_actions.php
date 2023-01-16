@@ -39,7 +39,7 @@ if (isset($_POST) and array_key_exists('needle', $_POST))
         $handle = fopen($filename, "r");
         $contents = fread($handle, filesize($filename));
         fclose($handle);
-        $n = stripos($contents, $needle);
+        $n = mb_stripos($contents, $needle);
         if(is_int($n))
         {
             $base = substr($filename, strlen(WMDB));
