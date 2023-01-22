@@ -1,5 +1,5 @@
 <?php
-define("DIR_INDEX", "dirinfo.md");  // directory index
+define("DIR_INDEX", "index.md");  // directory index
 define("FOLDER_TPLS", "assets");    // папка шаблонов
 define("WMDB", str_replace( "\\", "/", $_ENV["WMDB"] ));    // Каталог WiKi
 define("CONTENT_LOCATION", WMDB . $_SERVER['SCRIPT_NAME']); // Путь к файлу контента

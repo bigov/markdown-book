@@ -116,17 +116,17 @@ function side_menu($TREE, $edit_link, $create_folder_link, $create_doc_link, $de
   // Верхняя часть дерева меню
   foreach($TREE->ar_top as $k=>$v)
   {
-    $side_menu .= sprintf("<div class=\"side-menu\"><a href=\"%s\">%s</a></div>\n", $v, $k);
+    $side_menu .= sprintf("<div class=\"side-menu\"><a href=\"%s/\">%s</a></div>\n", $v, $k);
   }
 
   // Отображение иерархии вложенных папок
   foreach($TREE->ar_step as $k=>$v)
   {
-    $side_menu .= sprintf("<div class=\"side-menu\">%s<a href=\"%s\">%s</a></div>\n", $sp, $v, $k);
+    $side_menu .= sprintf("<div class=\"side-menu\">%s<a href=\"%s/\">%s</a></div>\n", $sp, $v, $k);
     $sp .= "&nbsp;&nbsp;";
   }
 
-  // Список документов текущего уровня
+  // Список папок и файлов в текущем каталоге
   foreach($TREE->ar_current as $k=>$v)
   {
      $side_menu .= "<div class=\"side-menu\">$sp<a href=\"$v\">$k</a></div>\n";
@@ -135,7 +135,7 @@ function side_menu($TREE, $edit_link, $create_folder_link, $create_doc_link, $de
   // Нижняя часть верхнего уровня в иерархии папок
   foreach($TREE->ar_bottom as $k=>$v)
   {
-    $side_menu .= "<div class=\"side-menu\"><a href=\"$v\">$k</a></div>\n";
+    $side_menu .= "<div class=\"side-menu\"><a href=\"$v/\">$k</a></div>\n";
   }
 
   return $side_menu;

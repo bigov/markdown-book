@@ -29,14 +29,13 @@ class tree
     {
         $l = scandir(WMDB);
         $dirs = array();   // список папок верхнего уровня
-        $base = '/';
 
         // построить массив папок верхнего уровня с адресами от корня сайта
         foreach($l as $o)
         {
             if(!str_starts_with($o, '.'))
             {
-              if(is_dir(WMDB . '/' . $o)) $dirs[ICO_DIR.$o] = $base.$o;
+              if(is_dir(WMDB . '/' . $o)) $dirs[ICO_DIR.$o] = '/'.$o;
             }
         }
 
@@ -65,10 +64,10 @@ class tree
         $lst = explode('/', $st);
         if(empty($lst[0])) array_shift($lst);
         $this->base_url = '/';
-        foreach($lst as $l)
+        foreach($lst as $o)
         {
-            $this->ar_step[ICO_DIR . $l] = $this->base_url . $l;
-            $this->base_url .= $l . '/';
+            $this->ar_step[ICO_DIR . $o] = $this->base_url . $o;
+            $this->base_url .= $o . '/';
         }
     }
 
@@ -101,7 +100,7 @@ class tree
                 }
                 else
                 {
-                    $dirs[ICO_DIR.$o] = $this->base_url . $o;
+                    $dirs[ICO_DIR.$o] = $this->base_url . $o . '/';
                 }
             }
         }
