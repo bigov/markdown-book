@@ -7,10 +7,15 @@
  * имени файла указывает на этот файл: '.sys/router.php')
  */
 
-if (str_ends_with  ($_SERVER['SCRIPT_FILENAME'], '.md' ) or
-    str_starts_with($_SERVER['SCRIPT_FILENAME'], 'sys'))
+//print_r($_SERVER['SCRIPT_FILENAME']);
+//print_r(__FILE__); exit;
+
+if (str_ends_with ($_SERVER['SCRIPT_FILENAME'], '.md' ) or
+    str_ends_with (__FILE__, $_SERVER['SCRIPT_FILENAME'])
+  )
 {
-    require_once 'sys/index.php'; // для файлов .md и несуществующих файлов
+    // тут путь в локальной файловой системе относительно каталога вызова
+    require_once 'sys/index.php';
 } else {
     return false;             // все остальное отдаем напрямую
 }
