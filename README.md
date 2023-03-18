@@ -11,6 +11,6 @@
 Запуск производится через пакетный файл с указанием пути к каталогу wiki:
 
 ```dos
-buildin-server-run.cmd C:\Users\user1\MyDocuments\MD-Wiki
+start.cmd C:\Users\user1\MyDocuments\MD-Wiki
 ```
 
