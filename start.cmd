@@ -13,8 +13,8 @@ SET "RUNDIR=%~dp0"
 SET "WMDB=%1"
 FOR /F "tokens=* USEBACKQ" %%F IN (`where git`) DO (SET GIT=%%F)
 
+git pull
 SET "G=git -C %1"
-
 %G% pull
 
 ECHO.
