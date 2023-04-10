@@ -2,6 +2,18 @@
 
 use Michelf\MarkdownExtra;
 
+// внесение изменений в Git репозиторий
+function git_push(){
+    $output=null;
+    $retval=null;
+    $git = '"' . $_ENV["GIT"] . '"' . ' -C "' . $_ENV["WMDB"] . '" ';
+
+    exec($git . 'add .', $output, $retval);
+    exec($git . 'commit -am "auto fix"', $output, $retval);
+    exec($git . 'push', $output, $retval);
+}
+
+
 function recurse_files_list($dir, $pattern)
 {
     $files_list = glob($dir . DIRECTORY_SEPARATOR . $pattern);

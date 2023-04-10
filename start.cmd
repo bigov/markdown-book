@@ -8,7 +8,11 @@ IF NOT EXIST "%1" GOTO _ERR_PATH
 SETLOCAL
 chcp 65001
 SET "RUNDIR=%~dp0"
+
+:: For PHP process variables: WMDB, GIT
 SET "WMDB=%1"
+FOR /F "tokens=* USEBACKQ" %%F IN (`where git`) DO (SET GIT=%%F)
+
 SET "G=git -C %1"
 
 %G% pull

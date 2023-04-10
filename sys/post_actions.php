@@ -4,6 +4,8 @@
 if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('filepathdir', $_POST))
 {
     file_put_contents($_POST['filepathdir'], $_POST['mdtext']);
+    git_push();
+
     header("Location: " . $_SERVER['SCRIPT_NAME']);
     exit;
 }
@@ -12,6 +14,8 @@ if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('f
 if (isset($_POST) and array_key_exists('DeleteFile', $_POST) and array_key_exists('filepathdir', $_POST))
 {
     unlink($_POST['filepathdir']);
+    git_push();
+
     // Найти позицию последнего вхождения подстроки "/" в строке адреса
     $n = strrpos($_SERVER['SCRIPT_NAME'], "/");
     // Взять часть строки адреса без последнего элемента
