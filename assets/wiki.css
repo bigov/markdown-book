@@ -9,15 +9,15 @@ H1 {
   font-weight: 600;
   margin-top: 0;
   padding: 0.5em;
-  color: darkgreen;
+  color: #44A44A;
   text-align: center;
-  border-bottom: solid 2px darkgreen;
+  border-bottom: solid 2px #44A44A;
 }
 H2, H3, H4, H5, H6 {
     margin-top: 2.5em;
 }
-strong {
-  color: darkgreen;
+TH strong {
+  color: #88EE88;
 }
 a {
   color: #1060B0;
@@ -45,7 +45,7 @@ th {
     font-size: 90%;
 }
 HR {
-  color: darkgreen;
+  color: #44A44A;
 }
 textarea {
   width: 100%;
@@ -75,10 +75,14 @@ input[type=submit] {
 }
 .search input {
   background-color: transparent;
-  margin: 0 0 10px 0;
+  margin: 0 0 4px 0;
   padding: 0.2em;
   font-size: 100%;
-  border: solid 1px #BBBBBB;
+  border: solid 2px #EEE;
+}
+.search input:focus {
+  border-color: #44A44A;
+  outline: none;
 }
 img {
     max-width: 100%;
@@ -106,20 +110,15 @@ pre code {
     background-color: none;
     font-size: 110%;
 }
-
 div.set-mode {
     border: none;
     white-space: nowrap;
-    padding: 0;
 }
 div.mode-btn {
     display: inline-block;
-    border: solid 1px #555;
-    font-size: 120%;
+    border: solid 2px #EEE;
+    padding: 6px 10px;
     text-align: center;
-    background-color: #888;
-    width: 42px;
-    margin: 0 0 0 0;
 }
 span.button {
     background-color: #888;
@@ -127,24 +126,25 @@ span.button {
     padding: 0;
 }
 div.mode-btn:hover, div.mode-btn:hover span{
-    border-color: darkgreen;
-    color: yellow;
-    background: green;
+    border-color: #44A44A;
 }
 div.side-menu {
     border: none;
     width: 100%;
     white-space: nowrap;
+    vertical-align: bottom;
+    line-height: 1.3em;
 }
 div.side-menu h4 {
     margin-top: 1em;
-    margin-bottom: 0.8em;
+    margin-bottom: 0.5em;
+    color: #44A44A;
 }
 div.side-menu a {
     color: #222222;
 }
 div.side-menu a:hover {
-   color: red;
+   color: #44A44A;
    text-decoration: none;
 }
 div.files-list {
@@ -157,9 +157,11 @@ div.files-list a:hover {
    text-decoration: none;
    color: red;
 }
-span.icon {
+div.side-menu img {
     margin: 0 0 0 0;
-    padding: 0 0.16em 0 0;
+    padding: 0 3px 0 0;
+    border: none;
+    vertical-align: -2px;
 }
 span.backlighting {
     color: red;

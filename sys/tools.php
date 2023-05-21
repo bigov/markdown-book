@@ -6,7 +6,7 @@ use Michelf\MarkdownExtra;
 function git_push(){
     $output=null;
     $retval=null;
-    $git = '"' . $_ENV["GIT"] . '"' . ' -C "' . $_ENV["WMDB"] . '" ';
+    $git = '"' . $_ENV["GIT"] . '"' . ' -C "' . $_SERVER['DOCUMENT_ROOT'] . '" ';
 
     exec($git . 'add .', $output, $retval);
     exec($git . 'commit -am "auto fix"', $output, $retval);

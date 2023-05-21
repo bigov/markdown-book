@@ -10,7 +10,7 @@ chcp 65001
 SET "RUNDIR=%~dp0"
 
 :: For PHP process variables: WMDB, GIT
-SET "WMDB=%1"
+:: SET "WMDB=%1"
 FOR /F "tokens=* USEBACKQ" %%F IN (`where git`) DO (SET GIT=%%F)
 
 git pull

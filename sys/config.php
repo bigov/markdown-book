@@ -1,15 +1,27 @@
 <?php
 define("DIR_INDEX", "index.md");  // directory index
 define("FOLDER_TPLS", "assets");    // папка шаблонов
-define("WMDB", str_replace( "\\", "/", $_ENV["WMDB"] ));    // Каталог WiKi
-define("CONTENT_LOCATION", WMDB . $_SERVER['SCRIPT_NAME']); // Путь к файлу контента
 
-define("ICO_DIR", "<span class=\"icon\" style=\"color: green;\">&#128447;</span>"); // Иконка папки
-define("ICO_TXT", "<span class=\"icon\" style=\"font-weight: bold; color: green; margin-right: 0.1em;\">&#128441;</span>"); // Иконка текстового документа
-define("ICO_PIC", "<span class=\"icon\" style=\"color: green;\">&#128445;</span>"); // Иконка изображения
+function embed_image($f, $w=16, $h=16)
+{
+    $fname = FOLDER_TPLS . "/" . $f;
+    return "<img width=\"$w\" height=\"$h\" " .
+        "alt=\"Embedded Image\" src=\"data:image/png;base64," .
+        base64_encode(file_get_contents($fname)) . "\"/>";
+}
 
-define("ICO_EDIT",    "<span class=\"button\">&#128393;</span>"); // Иконка редактирования
-define("ICO_NEW_DIR", "<span class=\"button\">&#128448;</span>"); // Иконка создать папку
-define("ICO_NEW_DOC", "<span class=\"button\">&#128459;</span>"); // Иконка создать документ
-define("ICO_DELETE",  "<span class=\"button\">&#128465;</span>"); // Иконка удалить
+//phpinfo();exit();
+//define("WMDB", str_replace( "\\", "/", $_ENV["WMDB"] ));    // Каталог WiKi
+define("WMDB", $_SERVER['DOCUMENT_ROOT']);
+
+define("CONTENT_LOCATION", $_SERVER['DOCUMENT_ROOT'] . $_SERVER['SCRIPT_NAME']); // Путь к файлу контента
+
+define("ICO_DIR", embed_image("folder.png"));
+define("ICO_TXT", embed_image("document.png"));
+define("ICO_PIC", embed_image("file.png"));
+
+define("ICO_EDIT",    embed_image("icon-edit-24.png",  24, 24)); // Иконка редактирования
+define("ICO_NEW_DIR", embed_image("icon-folder-24.png",24, 24)); // Иконка создать папку
+define("ICO_NEW_DOC", embed_image("icon-file-24.png",  24, 24)); // Иконка создать документ
+define("ICO_DELETE",  embed_image("icon-trash-24.png", 24, 24)); // Иконка удалить
 
