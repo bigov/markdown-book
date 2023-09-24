@@ -3,8 +3,11 @@
 // Если получен запрос с новым текстом, то записать и вернуться к файлу
 if (isset($_POST) and array_key_exists('mdtext', $_POST) and array_key_exists('filepathdir', $_POST))
 {
-    file_put_contents($_POST['filepathdir'], $_POST['mdtext']);
-    git_push();
+	if(!$_POST['cancel'])
+	{
+    	file_put_contents($_POST['filepathdir'], $_POST['mdtext']);
+    	git_push();
+ 	}
 
     header("Location: " . $_SERVER['SCRIPT_NAME']);
     exit;
