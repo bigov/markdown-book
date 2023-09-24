@@ -6,6 +6,9 @@ use Michelf\MarkdownExtra;
 function git_push(){
     $output=null;
     $retval=null;
+
+   if (!array_key_exists('GIT', $_ENV)) $_ENV["GIT"] = "git";
+
     $git = '"' . $_ENV["GIT"] . '"' . ' -C "' . $_SERVER['DOCUMENT_ROOT'] . '" ';
 
     exec($git . 'add .', $output, $retval);
