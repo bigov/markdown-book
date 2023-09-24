@@ -3,4 +3,4 @@
 <head>
 <meta charset="utf-8">
 <title>MD notepad</title>
-
+<link rel="icon" type="image/x-icon" href="/favicon.png">
