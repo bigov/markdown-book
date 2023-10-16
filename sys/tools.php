@@ -120,8 +120,11 @@ function side_menu($TREE, $edit_link, $create_folder_link, $create_doc_link, $de
   $sp = "&nbsp;&nbsp;";
   $home_url = '/' . DIR_INDEX;
 
-  $side_menu = "</td><td width=\"200px\" valign=\"top\" style=\"padding: 1em 0 0 2em;\">";
-  $side_menu .= sprintf(
+	//$side_menu = "</td><td width=\"200px\" valign=\"top\" style=\"padding: 1em 0 0 2em;\">";
+	// GRID LAYOUT
+  $side_menu = "</div><div>";
+
+	$side_menu .= sprintf(
       file_get_contents(FOLDER_TPLS . "/mode_menu.tpl"),
       $edit_link, ICO_EDIT, $create_folder_link, ICO_NEW_DIR,
       $create_doc_link, ICO_NEW_DOC, $delete_link, ICO_DELETE

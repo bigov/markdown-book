@@ -1,4 +1,6 @@
 
+<div class="sticky_menu">
+
 <div class="search">
   <form action="" method="post">
     <input type="text" name="needle" placeholder="поиск"/>
