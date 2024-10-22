@@ -13,9 +13,9 @@ SET "RUNDIR=%~dp0"
 :: SET "WMDB=%1"
 FOR /F "tokens=* USEBACKQ" %%F IN (`where git`) DO (SET GIT=%%F)
 
-git pull
+::git pull
 SET "G=git -C %1"
-%G% pull
+::%G% pull
 
 ECHO.
 ECHO Starting development php-server
@@ -24,9 +24,9 @@ ECHO.
 START http://localhost:8888/
 %PHPEXE% -S localhost:8888 -c %RUNDIR%sys\php.ini -d include_path=%RUNDIR% -t "%1" sys\router.php
 
-%G% add .
-%G% commit -am "modify"
-%G% push
+::%G% add .
+::%G% commit -am "modify"
+::%G% push
 ENDLOCAL
 GOTO _EXIT
 
