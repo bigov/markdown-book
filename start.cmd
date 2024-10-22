@@ -13,9 +13,9 @@ SET "RUNDIR=%~dp0"
 :: SET "WMDB=%1"
 FOR /F "tokens=* USEBACKQ" %%F IN (`where git`) DO (SET GIT=%%F)
 
-git pull
+::git pull
 SET "G=git -C %1"
-%G% pull
+::%G% pull
 
 ECHO.
 ECHO Starting development php-server
